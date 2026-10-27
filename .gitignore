@@ -45,8 +45,9 @@ Thumbs.db
 .vscode/
 .agents/
 
-#Used for Presentation and Generating supporting graphs
+# Used for Presentation and Generating supporting graphs
 SOS-Team-10.pptx
 presentation_results/
 generate_presentation_charts.py
-confusion_matrix.png & modality_importance.png
+confusion_matrix.png
+modality_importance.png
