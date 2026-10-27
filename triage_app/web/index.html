@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edge-Powered Multimodal Emergency Triage Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo-badge">
+        <span class="pulsing-radar"></span>
+        <span class="logo-text">MSOC-EDGE</span>
+      </div>
+      <div class="header-titles">
+        <h1 class="main-title">Edge-Powered Multimodal Context-Aware Emergency Triage</h1>
+        <p class="sub-title">CSE220 - Multimodal AI Systems &bull; Team 10 &bull; Automated Incident Prioritization &amp; Dispatch</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="system-pill">
+        <span class="status-indicator online"></span>
+        <span class="status-text">EDGE NODE #04: ONLINE</span>
+        <span class="divider">|</span>
+        <span class="latency-counter" id="live-latency">18.4 ms</span>
+      </div>
+      <div class="model-tags">
+        <span class="badge-tag">ViT-Base</span>
+        <span class="badge-tag">DistilBERT</span>
+        <span class="badge-tag">1568-D Fusion</span>
+        <span class="badge-tag">Random Forest</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Command Center Grid -->
+  <main class="dashboard-grid">
+    
+    <!-- LEFT PANEL: Multimodal Incident Ingestion -->
+    <section class="panel panel-ingestion">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <span class="panel-number">01</span>
+          <h2>Multimodal Incident Ingestion</h2>
+        </div>
+        <span class="chip chip-cyan">Edge Sensors</span>
+      </div>
+
+      <!-- Preset Scenarios Selector -->
+      <div class="scenario-selector-wrap">
+        <label class="section-label">Select Incident Scenario or Test Custom Input:</label>
+        <div class="scenario-chips" id="scenario-chips">
+          <!-- Populated by JavaScript, includes '+ Custom / Blank Test' -->
+        </div>
+      </div>
+
+      <!-- Modality 1: Visual Feed -->
+      <div class="card card-visual">
+        <div class="card-header">
+          <div class="card-title-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <span class="card-label">Visual Input (CCTV / Drone / Surveillance)</span>
+          </div>
+          <span class="badge-sub" id="cat-badge">Structure Fire</span>
+        </div>
+        
+        <div class="image-preview-container" id="drop-zone">
+          <img id="incident-image" src="" alt="Emergency Scene">
+          <div class="vit-patch-grid" id="vit-grid"></div>
+          <div class="image-overlay-tags">
+            <span class="tag-live" id="img-source-tag">LIVE FEED</span>
+            <span class="tag-res">224 &times; 224 ViT Ingestion</span>
+          </div>
+        </div>
+
+        <div class="custom-upload-bar">
+          <input type="file" id="image-upload" accept="image/*" style="display: none;">
+          <button type="button" class="btn-upload" id="btn-trigger-upload">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>Upload Your Own Image</span>
+          </button>
+          <button type="button" class="btn-clear-img" id="btn-clear-img" style="display: none;">Reset Image</button>
+        </div>
+
+        <div class="slider-control">
+          <div class="slider-header">
+            <span>Visual Damage Severity Estimate</span>
+            <span class="slider-val" id="vis-val-display">85%</span>
+          </div>
+          <input type="range" id="vis-slider" min="5" max="100" value="85">
+        </div>
+      </div>
+
+      <!-- Modality 2: Textual Urgency -->
+      <div class="card card-textual">
+        <div class="card-header">
+          <div class="card-title-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span class="card-label">Textual Emergency Transcript or Short Text</span>
+          </div>
+          <span class="badge-sub">DistilBERT NLP</span>
+        </div>
+        <textarea id="transcript-input" rows="3" placeholder="Enter emergency call transcript, SMS, or short note (e.g. 'fire on 2nd floor')..."></textarea>
+        
+        <!-- Quick Short Text Prompts -->
+        <div class="quick-text-chips">
+          <span class="quick-title">Quick Short Texts:</span>
+          <button type="button" class="chip-prompt" data-text="heavy fire and thick black smoke trapped workers">🔥 "fire & smoke"</button>
+          <button type="button" class="chip-prompt" data-text="highway pileup multi-vehicle crash victims bleeding">🚗 "highway crash"</button>
+          <button type="button" class="chip-prompt" data-text="flood water rising in house ground floor">🌊 "flood water"</button>
+          <button type="button" class="chip-prompt" data-text="sprained ankle and minor fall at home">🩹 "sprained ankle"</button>
+          <button type="button" class="chip-prompt" data-text="minor bumper scratch in parking lot no injury">🚗 "parking scratch"</button>
+        </div>
+
+        <div class="keyword-cloud" id="keyword-cloud">
+          <!-- Keywords injected here -->
+        </div>
+      </div>
+
+      <!-- Modality 3: IoT & Environmental Sensors -->
+      <div class="card card-iot">
+        <div class="card-header">
+          <div class="card-title-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+            <span class="card-label">IoT Telemetry &amp; Geospatial Context</span>
+          </div>
+          <span class="badge-sub" id="sensor-mode-badge">32-D Telemetry</span>
+        </div>
+
+        <!-- Raw Baseline Data Mode Button -->
+        <div class="raw-data-toggle-wrap">
+          <button type="button" class="btn-raw-mode" id="btn-toggle-raw-iot">
+            <span class="raw-dot" id="raw-dot"></span>
+            <span id="raw-iot-text">Simulate "Zero Rich IoT Data" (Normal 24°C, 0 Smoke)</span>
+          </button>
+        </div>
+
+        <div class="iot-controls-grid">
+          <div class="iot-meter-item">
+            <div class="meter-info">
+              <span class="meter-name">Temperature Sensor</span>
+              <span class="meter-val text-red" id="temp-display">115 &deg;C</span>
+            </div>
+            <input type="range" id="temp-slider" min="15" max="150" value="115">
+          </div>
+          <div class="iot-meter-item">
+            <div class="meter-info">
+              <span class="meter-name">Smoke &amp; Gas PPM</span>
+              <span class="meter-val text-amber" id="smoke-display">880 PPM</span>
+            </div>
+            <input type="range" id="smoke-slider" min="0" max="1000" value="880">
+          </div>
+        </div>
+        <div class="geo-context-row">
+          <div class="geo-chip">
+            <span class="geo-lbl">GPS Coordinates:</span>
+            <span class="geo-val" id="gps-display">12.9716&deg; N, 77.5946&deg; E</span>
+          </div>
+          <div class="geo-chip">
+            <span class="geo-lbl">Nearest Medical:</span>
+            <span class="geo-val" id="hospital-display">City Trauma Center (2.4 km)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modality Ablation Toggles -->
+      <div class="ablation-bar">
+        <div class="ablation-title">
+          <span>Ablation Study Toggles:</span>
+          <small>(Simulate network drops)</small>
+        </div>
+        <div class="toggle-group">
+          <label class="toggle-switch">
+            <input type="checkbox" id="mod-vis" checked>
+            <span class="slider-toggle"></span>
+            <span class="toggle-text">Vision (ViT)</span>
+          </label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="mod-txt" checked>
+            <span class="slider-toggle"></span>
+            <span class="toggle-text">Text (DistilBERT)</span>
+          </label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="mod-iot" checked>
+            <span class="slider-toggle"></span>
+            <span class="toggle-text">IoT / GIS</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Run Triage Action Button -->
+      <button class="btn-execute" id="btn-run-triage">
+        <span class="btn-pulse-ring"></span>
+        <svg class="icon-btn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <span>EXECUTE MULTIMODAL EDGE TRIAGE</span>
+      </button>
+    </section>
+
+    <!-- CENTER PANEL: Multimodal Fusion & Latent Space Inspector -->
+    <section class="panel panel-fusion">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <span class="panel-number">02</span>
+          <h2>Feature Fusion &amp; Latent Inspector</h2>
+        </div>
+        <span class="chip chip-purple">Early Concatenation</span>
+      </div>
+
+      <!-- Fusion Architecture Card -->
+      <div class="card card-tensor">
+        <div class="tensor-flow-diagram">
+          <div class="tensor-block block-vit">
+            <span class="block-title">Visual Embeddings</span>
+            <span class="block-dim">ViT [CLS]: 768-D</span>
+            <div class="mini-spark-bar" id="spark-vis"></div>
+          </div>
+          <span class="flow-plus">+</span>
+          <div class="tensor-block block-bert">
+            <span class="block-title">Textual Urgency</span>
+            <span class="block-dim">DistilBERT: 768-D</span>
+            <div class="mini-spark-bar" id="spark-txt"></div>
+          </div>
+          <span class="flow-plus">+</span>
+          <div class="tensor-block block-iot">
+            <span class="block-title">Spatial &amp; Sensors</span>
+            <span class="block-dim">Telemetry: 32-D</span>
+            <div class="mini-spark-bar" id="spark-iot"></div>
+          </div>
+        </div>
+        <div class="fused-tensor-badge">
+          <span>Fused Representation Vector:</span>
+          <strong>1,568 Dimensions</strong>
+          <span class="badge-tag">Normalized &amp; Aligned</span>
+        </div>
+      </div>
+
+      <!-- Modality Contribution Breakdown -->
+      <div class="card card-contribution">
+        <div class="card-header">
+          <span class="card-label">Dynamic Modality Contribution Profile</span>
+          <span class="badge-sub">Normalized Share</span>
+        </div>
+        <div class="modality-share-bars">
+          <div class="share-row">
+            <div class="share-info">
+              <span>Visual Modality (ViT)</span>
+              <strong id="share-vis-val">48.2%</strong>
+            </div>
+            <div class="share-progress-track">
+              <div class="share-progress-fill fill-blue" id="share-vis-bar" style="width: 48.2%;"></div>
+            </div>
+          </div>
+          <div class="share-row">
+            <div class="share-info">
+              <span>Textual Modality (DistilBERT)</span>
+              <strong id="share-txt-val">35.6%</strong>
+            </div>
+            <div class="share-progress-track">
+              <div class="share-progress-fill fill-cyan" id="share-txt-bar" style="width: 35.6%;"></div>
+            </div>
+          </div>
+          <div class="share-row">
+            <div class="share-info">
+              <span>IoT &amp; Spatio-Temporal Modality</span>
+              <strong id="share-iot-val">16.2%</strong>
+            </div>
+            <div class="share-progress-track">
+              <div class="share-progress-fill fill-emerald" id="share-iot-bar" style="width: 16.2%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edge System Benchmarks -->
+      <div class="card card-benchmarks">
+        <div class="card-header">
+          <span class="card-label">Edge Node Hardware Telemetry</span>
+          <span class="badge-sub">Real-Time Metrics</span>
+        </div>
+        <div class="benchmark-grid">
+          <div class="metric-box">
+            <span class="metric-label">Inference Latency</span>
+            <span class="metric-value text-emerald" id="latency-val">22.4 ms</span>
+            <span class="metric-sub">Edge Accelerated</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Memory Footprint</span>
+            <span class="metric-value">342 MB</span>
+            <span class="metric-sub">Quantized Runtime</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Cloud Bandwidth Saved</span>
+            <span class="metric-value text-cyan">98.2%</span>
+            <span class="metric-sub">Local Inference</span>
+          </div>
+          <div class="metric-box">
+            <span class="metric-label">Model Architecture</span>
+            <span class="metric-value text-amber">Balanced RF</span>
+            <span class="metric-sub">100 Trees &bull; Depth 15</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Edge Neural Execution Terminal -->
+      <div class="card card-terminal">
+        <div class="terminal-header">
+          <div class="terminal-controls">
+            <span class="term-dot term-dot-red"></span>
+            <span class="term-dot term-dot-yellow"></span>
+            <span class="term-dot term-dot-green"></span>
+          </div>
+          <div class="terminal-title">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+            <span>LIVE EDGE INFERENCE TERMINAL</span>
+            <span class="term-badge-pulse">STDOUT</span>
+          </div>
+          <div class="terminal-actions">
+            <button type="button" class="btn-term-icon" id="btn-term-clear" title="Clear console output">
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>Clear</span>
+            </button>
+            <button type="button" class="btn-term-icon" id="btn-term-copy" title="Copy raw logs">
+              <svg class="icon-xs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+        <div class="terminal-screen" id="terminal-screen">
+          <div class="term-line term-init"><span class="term-tag tag-sys">[SYSTEM]</span> Edge-Powered Multimodal Emergency Triage Node v2.4 initialized.</div>
+          <div class="term-line term-init"><span class="term-tag tag-mod">[MODELS]</span> ViT-Base (768-D) + DistilBERT (768-D) + 32-D Telemetry loaded in memory.</div>
+          <div class="term-line term-init"><span class="term-tag tag-ready">[STATUS]</span> Listening on localhost:8080 &bull; Ready for multimodal inference packets.</div>
+        </div>
+        <div class="terminal-prompt-bar">
+          <span class="term-prompt">edge-ai@kare-node04:~$</span>
+          <span class="term-cmd-preview" id="term-status-msg">awaiting trigger...</span>
+          <span class="term-cursor"></span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT PANEL: Automated Prioritization & Emergency Dispatch -->
+    <section class="panel panel-decision">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <span class="panel-number">03</span>
+          <h2>Prioritization &amp; Dispatch Output</h2>
+        </div>
+        <span class="chip chip-red">Decision Center</span>
+      </div>
+
+      <!-- Priority Classification Hero Card -->
+      <div class="card card-priority" id="priority-hero-card">
+        <div class="priority-header">
+          <span class="priority-sub-title">ASSIGNED EMERGENCY TRIAGE PRIORITY</span>
+          <span class="priority-confidence" id="confidence-badge">99.2% CONFIDENCE</span>
+        </div>
+        <div class="priority-main-display">
+          <div class="priority-badge-big" id="priority-badge-big">P1</div>
+          <div class="priority-meta">
+            <h3 class="priority-name" id="priority-name">P1 - CRITICAL</h3>
+            <p class="priority-desc" id="priority-desc">Immediate Life Threat / Immediate Medical Evacuation Required</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Class Probability Distribution -->
+      <div class="card card-probabilities">
+        <div class="card-header">
+          <span class="card-label">Multi-Class Probability Distribution</span>
+          <span class="badge-sub">Random Forest Softmax</span>
+        </div>
+        <div class="prob-list">
+          <div class="prob-item">
+            <div class="prob-meta">
+              <span class="prob-code p1-text">P1 - Critical</span>
+              <strong id="prob-p1">99.0%</strong>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill fill-p1" id="prob-bar-p1" style="width: 99%;"></div>
+            </div>
+          </div>
+          <div class="prob-item">
+            <div class="prob-meta">
+              <span class="prob-code p2-text">P2 - High</span>
+              <strong id="prob-p2">1.0%</strong>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill fill-p2" id="prob-bar-p2" style="width: 1%;"></div>
+            </div>
+          </div>
+          <div class="prob-item">
+            <div class="prob-meta">
+              <span class="prob-code p3-text">P3 - Moderate</span>
+              <strong id="prob-p3">0.0%</strong>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill fill-p3" id="prob-bar-p3" style="width: 0%;"></div>
+            </div>
+          </div>
+          <div class="prob-item">
+            <div class="prob-meta">
+              <span class="prob-code p4-text">P4 - Low</span>
+              <strong id="prob-p4">0.0%</strong>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill fill-p4" id="prob-bar-p4" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Automated Situational & Dispatch Report -->
+      <div class="card card-dispatch">
+        <div class="card-header">
+          <span class="card-label">Automated Incident Situational Report</span>
+          <span class="badge-sub" id="dispatch-code">EMG-TRIAGE-9041</span>
+        </div>
+        <div class="dispatch-details">
+          <div class="dispatch-row">
+            <span class="disp-lbl">Action Protocol:</span>
+            <strong class="disp-val text-red" id="dispatch-action">IMMEDIATE EVACUATION &amp; MASS CASUALTY PROTOCOL</strong>
+          </div>
+          <div class="dispatch-row">
+            <span class="disp-lbl">Dispatched Units:</span>
+            <div class="unit-chips" id="dispatched-units-list">
+              <!-- Units populated here -->
+            </div>
+          </div>
+          <div class="dispatch-row">
+            <span class="disp-lbl">Medical Facility Routing:</span>
+            <span class="disp-val" id="dispatch-hospital">City General Hospital &bull; Trauma Level 1 Alert</span>
+          </div>
+          <div class="dispatch-row">
+            <span class="disp-lbl">Estimated Responder ETA:</span>
+            <span class="disp-val text-emerald" id="dispatch-eta">3 - 5 mins</span>
+          </div>
+        </div>
+        <div class="dispatch-actions">
+          <button class="btn-secondary" id="btn-copy-log">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>Copy Alert Log</span>
+          </button>
+          <button class="btn-alert" id="btn-siren">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span id="siren-text">Trigger Sound Alert</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Edge-Powered Multimodal Emergency Triage System &bull; Project Demonstration for CSE220 &bull; Powered by Google ViT &amp; DistilBERT</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
