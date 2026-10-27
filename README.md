@@ -56,20 +56,6 @@ The system synthesizes a **$1,568$-dimensional latent representation vector** ev
 
 ---
 
-### Summary Ablation Table
-
-| Config ID | System Configuration | Accuracy | Macro F1 | Specificity | Edge Latency |
-| :---: | :--- | :---: | :---: | :---: | :---: |
-| **C1** | **Proposed Full Multimodal (ViT + DistilBERT + IoT + GIS)** | **95.32%** | **94.58%** | **96.82%** | **22.4 ms** |
-| **C2** | w/o Social-Temporal Synthesis (ViT + DistilBERT + IoT) | 91.21% | 90.11% | 93.15% | 21.8 ms |
-| **C3** | w/o GPS Proximity (ViT + DistilBERT + Sensors) | 90.34% | 88.95% | 92.40% | 21.0 ms |
-| **C4** | w/o Textual NLP (ViT Vision + Sensors + GIS) | 88.36% | 87.09% | 90.80% | 18.2 ms |
-| **C5** | w/o Video Extraction (ViT Image + DistilBERT + GIS) | 87.45% | 86.18% | 89.92% | 19.5 ms |
-| **C6** | Unimodal Baseline: Image Only (Google ViT-Base) | 78.62% | 76.89% | 82.10% | 15.6 ms |
-| **C7** | Traditional Baseline: Non-Deep Learning RF (Tabular) | 71.34% | 69.22% | 74.50% | 4.2 ms |
-
----
-
 ## ⚡ Interactive Web Command Center & Live Edge Terminal
 
 The project features a **Mission Control Web Dashboard** located in `triage_app/`:
