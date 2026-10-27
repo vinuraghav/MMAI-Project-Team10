@@ -6,13 +6,7 @@
 [![Ensemble](https://img.shields.io/badge/Classifier-Balanced%20Random%20Forest%20(1568--D)-emerald.svg)](https://scikit-learn.org/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
 
-> **CSE220 — Multimodal AI Systems (Project Demonstration & Academic Manuscript)**  
-> **Institution**: Kalasalingam Academy of Research and Education (KARE)  
-> **Team 10** | **Faculty Supervisor**: Dr. R. Raja Sekar  
-
 ---
-
-## 📌 Executive Summary & Abstract
 
 Traditional emergency dispatch centers (PSAP / 911 / 112) suffer from acute perceptual bottlenecks, relying predominantly on fragmented voice transcripts and subjective verbal reporting during mass casualty incidents and catastrophic disasters. Such unimodal reporting often introduces dangerous triage delays, misprioritizes walking wounded over critically injured victims, or fails completely under network congestion.
 
@@ -62,18 +56,6 @@ The system synthesizes a **$1,568$-dimensional latent representation vector** ev
 
 ---
 
-## 📊 Publication & Presentation Benchmarks
-
-All benchmark figures are rendered at **$300\text{ DPI}$** publication standards in `presentation_results/`:
-
-| Benchmark Figure | Description | Key Research Metric |
-| :--- | :--- | :--- |
-| ![Confusion Matrix](presentation_results/figure1_confusion_matrix.png) | **Figure 1: Normalized 4-Class Confusion Matrix** | **95.32% Overall Accuracy** across P1–P4 classes; minimal off-diagonal misclassifications. |
-| ![Ablation Study](presentation_results/figure2_ablation_study.png) | **Figure 2: Multimodal Ablation Study (C1 to C7)** | Demonstrates progressive lift from **71.34%** (Tabular RF baseline) to **95.32%** (Full Multimodal). |
-| ![ROC Curves](presentation_results/figure3_multiclass_roc.png) | **Figure 3: Multi-Class ROC Curves** | Macro-Average $\text{AUC} = \mathbf{0.963}$; P1-Critical $\text{AUC} = \mathbf{0.982}$. |
-| ![Edge Benchmarks](presentation_results/figure4_edge_vs_cloud_benchmark.png) | **Figure 4: Edge vs. Cloud Latency & Bandwidth** | **22.4 ms** edge response time invariant to disaster cellular congestion; **98.2% bandwidth reduction**. |
-| ![Radar Plot](presentation_results/figure5_radar_comparison.png) | **Figure 5: Operational Radar Comparison** | Holistic comparison across Accuracy, Precision, Recall, F1, Specificity, and Efficiency. |
-
 ### Summary Ablation Table
 
 | Config ID | System Configuration | Accuracy | Macro F1 | Specificity | Edge Latency |
@@ -121,15 +103,7 @@ python triage_app/server.py 8080
 ```
 Open **`http://localhost:8080`** in any modern web browser.
 
-### 3. Regenerate Academic Publication Figures
-```bash
-python generate_presentation_charts.py
-```
-Outputs all $300\text{ DPI}$ charts to `presentation_results/`.
-
----
-
-## 📂 Project Directory Structure
+## Structure
 
 ```text
 MMAI-Project-Team10/
@@ -157,13 +131,3 @@ MMAI-Project-Team10/
         ├── style.css               # Neon Glassmorphic Theme & Terminal Styling
         └── app.js                  # Asynchronous Client Controller & Live Terminal Stream
 ```
-
----
-
-## 👥 Contributors & Acknowledgements
-
-- **Department of Computer Science and Engineering**  
-- **Kalasalingam Academy of Research and Education (KARE)**  
-- **Course**: CSE220 — Multimodal AI Systems  
-- **Faculty Supervisor**: Dr. R. Raja Sekar  
-- **Team 10 Authors**: Vinu Raghav R S & Project Collaborators  
