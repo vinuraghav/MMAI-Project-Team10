@@ -107,15 +107,6 @@ Open **`http://localhost:8080`** in any modern web browser.
 
 ```text
 MMAI-Project-Team10/
-├── SOS-Team-10.pptx                # Final Academic Presentation Slide Deck
-├── generate_presentation_charts.py # Script generating 5 presentation figures
-├── presentation_results/           # 300 DPI high-res charts and summary tables
-│   ├── figure1_confusion_matrix.png
-│   ├── figure2_ablation_study.png
-│   ├── figure3_multiclass_roc.png
-│   ├── figure4_edge_vs_cloud_benchmark.png
-│   ├── figure5_radar_comparison.png
-│   └── table_performance_metrics.md
 ├── requirements.txt                # Core Python package dependencies
 ├── triage_pipeline.py              # Foundational training & evaluation pipeline
 ├── triage_simulation.py            # Monte-Carlo incident simulation pipeline
